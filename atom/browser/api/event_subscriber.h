@@ -9,7 +9,7 @@
 #include <string>
 
 #include "atom/common/api/event_emitter_caller.h"
-#include "base/synchronization/lock.h"
+#include "base/callback.h"
 #include "content/public/browser/browser_thread.h"
 #include "native_mate/native_mate/arguments.h"
 
@@ -45,10 +45,12 @@ class EventSubscriberBase {
 template <typename HandlerType>
 class EventSubscriber : internal::EventSubscriberBase {
  public:
-  using EventCallback = void (HandlerType::*)(mate::Arguments* args);
+  using EventCallback = base::Callback<void(mate::Arguments* args)>;
+
   // Alias to unique_ptr with deleter.
   using unique_ptr = std::unique_ptr<EventSubscriber<HandlerType>,
                                      void (*)(EventSubscriber<HandlerType>*)>;
+
   // EventSubscriber should only be created/deleted in the main thread since it
   // communicates with the V8 engine. This smart pointer makes it simpler to
   // bind the lifetime of EventSubscriber with a class whose lifetime is managed
@@ -65,10 +67,6 @@ class EventSubscriber : internal::EventSubscriberBase {
       DCHECK(
           !::content::BrowserThread::CurrentlyOn(::content::BrowserThread::UI));
       DCHECK(ptr);
-      // Acquire handler lock and reset handler_ to ensure that any new events
-      // emitted will be ignored after this function returns
-      base::AutoLock auto_lock(ptr->handler_lock_);
-      ptr->handler_ = nullptr;
       content::BrowserThread::PostTask(
           content::BrowserThread::UI, FROM_HERE,
           base::Bind(
@@ -86,14 +84,13 @@ class EventSubscriber : internal::EventSubscriberBase {
     }
   };
 
-  EventSubscriber(HandlerType* handler,
-                  v8::Isolate* isolate,
+  EventSubscriber(v8::Isolate* isolate,
                   v8::Local<v8::Object> emitter)
-      : EventSubscriberBase(isolate, emitter), handler_(handler) {
+      : EventSubscriberBase(isolate, emitter) {
     DCHECK_CURRENTLY_ON(::content::BrowserThread::UI);
   }
 
-  void On(const std::string& event, EventCallback callback) {
+  void On(const std::string& event, EventCallback&& callback) {
     DCHECK_CURRENTLY_ON(::content::BrowserThread::UI);
     EventSubscriberBase::On(event);
     callbacks_.insert(std::make_pair(event, callback));
@@ -116,21 +113,12 @@ class EventSubscriber : internal::EventSubscriberBase {
   void EventEmitted(const std::string& event_name,
                     mate::Arguments* args) override {
     DCHECK_CURRENTLY_ON(::content::BrowserThread::UI);
-    base::AutoLock auto_lock(handler_lock_);
-    if (!handler_) {
-      // handler_ was probably destroyed by another thread and we should not
-      // access it.
-      return;
-    }
     auto it = callbacks_.find(event_name);
     if (it != callbacks_.end()) {
-      auto method = it->second;
-      (handler_->*method)(args);
+      it->second.Run(args);
     }
   }
 
-  HandlerType* handler_;
-  base::Lock handler_lock_;
   std::map<std::string, EventCallback> callbacks_;
 };
 
