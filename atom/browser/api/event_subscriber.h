@@ -7,6 +7,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include "base/callback.h"
 #include "base/memory/weak_ptr.h"
