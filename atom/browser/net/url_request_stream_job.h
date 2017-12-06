@@ -6,6 +6,7 @@
 #define ATOM_BROWSER_NET_URL_REQUEST_STREAM_JOB_H_
 
 #include <deque>
+#include <memory>
 #include <string>
 
 #include "atom/browser/api/event_subscriber.h"
@@ -23,6 +24,7 @@ class URLRequestStreamJob : public JsAsker<net::URLRequestJob> {
  public:
   URLRequestStreamJob(net::URLRequest* request,
                       net::NetworkDelegate* network_delegate);
+  ~URLRequestStreamJob() override;
 
   void OnData(mate::Arguments* args);
   void OnEnd(mate::Arguments* args);
@@ -56,7 +58,8 @@ class URLRequestStreamJob : public JsAsker<net::URLRequestJob> {
   scoped_refptr<net::IOBuffer> pending_io_buf_;
   int pending_io_buf_size_;
   scoped_refptr<net::HttpResponseHeaders> response_headers_;
-  mate::EventSubscriber<URLRequestStreamJob>::SafePtr subscriber_;
+  std::unique_ptr<mate::EventSubscriber<URLRequestStreamJob>> subscriber_;
+
   base::WeakPtrFactory<URLRequestStreamJob> weak_factory_;
 
   DISALLOW_COPY_AND_ASSIGN(URLRequestStreamJob);
