@@ -327,6 +327,7 @@
               '-lwinmm.lib',
               '-lcrypt32.lib',
               '-luiautomationcore.lib',
+              '-lHid.lib'
             ],
           },
           'dependencies': [
