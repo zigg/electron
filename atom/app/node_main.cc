@@ -10,7 +10,6 @@
 #include "atom/common/api/atom_bindings.h"
 #include "atom/common/crash_reporter/crash_reporter.h"
 #include "atom/common/native_mate_converters/string16_converter.h"
-#include "atom/common/node_bindings.h"
 #include "base/command_line.h"
 #include "base/feature_list.h"
 #include "base/task_scheduler/task_scheduler.h"
@@ -49,16 +48,14 @@ int NodeMain(int argc, char *argv[]) {
     // Initialize gin::IsolateHolder.
     JavascriptEnvironment gin_env;
 
-    // Explicitly register electron's builtin modules.
-    NodeBindings::RegisterBuiltinModules();
-
     int exec_argc;
     const char** exec_argv;
     node::Init(&argc, const_cast<const char**>(argv), &exec_argc, &exec_argv);
 
+    node::IsolateData isolate_data(gin_env.isolate(), loop);
     node::Environment* env = node::CreateEnvironment(
-        node::CreateIsolateData(gin_env.isolate(), loop, gin_env.platform()),
-        gin_env.context(), argc, argv, exec_argc, exec_argv);
+        &isolate_data, gin_env.context(), argc, argv,
+        exec_argc, exec_argv);
 
     // Enable support for v8 inspector.
     NodeDebugger node_debugger(env);
@@ -80,7 +77,6 @@ int NodeMain(int argc, char *argv[]) {
     bool more;
     do {
       more = uv_run(env->event_loop(), UV_RUN_ONCE);
-      gin_env.platform()->DrainBackgroundTasks(env->isolate());
       if (more == false) {
         node::EmitBeforeExit(env);
 
@@ -94,8 +90,6 @@ int NodeMain(int argc, char *argv[]) {
 
     exit_code = node::EmitExit(env);
     node::RunAtExit(env);
-    gin_env.platform()->DrainBackgroundTasks(env->isolate());
-    gin_env.platform()->CancelPendingDelayedTasks(env->isolate());
 
     node::FreeEnvironment(env);
   }
