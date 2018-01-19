@@ -9,7 +9,7 @@
 
 namespace node {
 class Environment;
-class MultiIsolatePlatform;
+class NodePlatform;
 }
 
 namespace atom {
@@ -20,7 +20,7 @@ class NodeDebugger {
   explicit NodeDebugger(node::Environment* env);
   ~NodeDebugger();
 
-  void Start(node::MultiIsolatePlatform* platform);
+  void Start(node::NodePlatform* platform);
 
  private:
   node::Environment* env_;
