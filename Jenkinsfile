@@ -6,7 +6,7 @@ pipeline {
       steps {
         echo "Cancel any duplicates of ${env.JOB_NAME}"
         script {
-          def cancelScript = load("../../groovy/cancel-builds-same-job.groovy")
+          def cancelScript = load("/Users/electron/groovy/cancel-builds-same-job.groovy")
           cancelScript.cancelDuplicates()
         }
         echo "Done cancel any duplicates of ${env.JOB_NAME}"
