@@ -5,6 +5,7 @@ pipeline {
       agent any
       steps {
         sh 'env | grep BUILD'
+        sh 'echo $JOB_NAME'
       }
     }
     stage('Build') {
