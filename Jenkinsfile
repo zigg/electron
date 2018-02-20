@@ -4,8 +4,10 @@ pipeline {
     stage('Cancel duplicates') {
       agent any
       steps {
-        def cancelScript = load("../../groovy/cancel-builds-same-job.groovy")
-        cancelScript.cancelDuplicates()
+        script {
+          def cancelScript = load("../../groovy/cancel-builds-same-job.groovy")
+          cancelScript.cancelDuplicates()
+        }
       }
     }
     stage('Build') {
