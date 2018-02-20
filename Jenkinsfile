@@ -4,8 +4,8 @@ pipeline {
     stage('Cancel duplicates') {
       agent any
       steps {
-        sh 'env | grep BUILD'
-        sh 'echo $JOB_NAME'
+        def cancelScript = load("../../groovy/cancel-builds-same-job.groovy")
+        cancelScript.cancelDuplicates()
       }
     }
     stage('Build') {
