@@ -1,6 +1,12 @@
 pipeline {
   agent none
   stages {
+    stage('Cancel duplicates') {
+      agent any
+      steps {
+        sh 'env | grep BUILD'
+      }
+    }
     stage('Build') {
       parallel {
         stage('electron-osx-x64') {
