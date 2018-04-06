@@ -3,6 +3,7 @@
 require('colors')
 const args = require('minimist')(process.argv.slice(2))
 const assert = require('assert')
+const eol = require('eol')
 const fs = require('fs')
 const { execSync } = require('child_process')
 const GitHub = require('github')
@@ -35,7 +36,7 @@ async function getDraftRelease (version, skipValidation) {
   }
   drafts = releaseInfo.data
     .filter(release => release.tag_name === versionToCheck &&
-      release.draft === true)
+      release.draft !== skipValidation)
   const draft = drafts[0]
   if (!skipValidation) {
     failureCount = 0
@@ -266,13 +267,14 @@ async function publishRelease (release) {
 
 async function makeRelease (releaseToValidate) {
   if (releaseToValidate) {
+    let skipValidation = false
     if (releaseToValidate === true) {
       releaseToValidate = pkgVersion
     } else {
-      console.log('Release to validate !=== true')
+      skipValidation = true
     }
     console.log(`Validating release ${releaseToValidate}`)
-    let release = await getDraftRelease(releaseToValidate)
+    let release = await getDraftRelease(releaseToValidate, skipValidation)
     await validateReleaseAssets(release, true)
   } else {
     checkVersion()
@@ -426,6 +428,11 @@ async function validateChecksums (validationArgs) {
   console.log(`Validating checksums for files from ${validationArgs.fileSource} ` +
     `against ${validationArgs.shaSumFile}.`)
   let shaSumFilePath = path.join(validationArgs.fileDirectory, validationArgs.shaSumFile)
+  let shaSumContents = fs.fileReadSync(shaSumFilePath, {
+    encoding: 'utf-8'
+  })
+  shaSumContents = eol.auto(shaSumContents)
+  fs.writeFileSync(shaSumFilePath, shaSumContents)
   let checker = new sumchecker.ChecksumValidator(validationArgs.algorithm,
     shaSumFilePath, validationArgs.checkerOpts)
   await checker.validate(validationArgs.fileDirectory, validationArgs.filesToCheck)
