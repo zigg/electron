@@ -673,8 +673,7 @@ void InspectableWebContentsImpl::DispatchProtocolMessage(
 }
 
 void InspectableWebContentsImpl::AgentHostClosed(
-    content::DevToolsAgentHost* agent_host, bool replaced) {
-}
+    content::DevToolsAgentHost* agent_host) {}
 
 void InspectableWebContentsImpl::RenderFrameHostChanged(
     content::RenderFrameHost* old_host,
