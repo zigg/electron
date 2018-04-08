@@ -32,8 +32,7 @@ NetworkDelegate::NetworkDelegate() {
   }
 }
 
-NetworkDelegate::~NetworkDelegate() {
-}
+NetworkDelegate::~NetworkDelegate() {}
 
 int NetworkDelegate::OnBeforeURLRequest(
     net::URLRequest* request,
@@ -60,15 +59,13 @@ int NetworkDelegate::OnBeforeStartTransaction(
 
 void NetworkDelegate::OnStartTransaction(
     net::URLRequest* request,
-    const net::HttpRequestHeaders& headers) {
-}
+    const net::HttpRequestHeaders& headers) {}
 
 void NetworkDelegate::OnBeforeSendHeaders(
     net::URLRequest* request,
     const net::ProxyInfo& proxy_info,
     const net::ProxyRetryInfoMap& proxy_retry_info,
-    net::HttpRequestHeaders* headers) {
-}
+    net::HttpRequestHeaders* headers) {}
 
 int NetworkDelegate::OnHeadersReceived(
     net::URLRequest* request,
@@ -80,29 +77,23 @@ int NetworkDelegate::OnHeadersReceived(
 }
 
 void NetworkDelegate::OnBeforeRedirect(net::URLRequest* request,
-                                            const GURL& new_location) {
-}
+                                       const GURL& new_location) {}
 
-void NetworkDelegate::OnResponseStarted(net::URLRequest* request) {
-}
+void NetworkDelegate::OnResponseStarted(net::URLRequest* request,
+                                        int net_error) {}
 
 void NetworkDelegate::OnNetworkBytesReceived(net::URLRequest* request,
-                                             int64_t bytes_read) {
-}
+                                             int64_t bytes_read) {}
 
 void NetworkDelegate::OnNetworkBytesSent(net::URLRequest* request,
-                                         int64_t bytes_sent) {
-}
+                                         int64_t bytes_sent) {}
 
-void NetworkDelegate::OnCompleted(net::URLRequest* request, bool started) {
-}
+void NetworkDelegate::OnCompleted(net::URLRequest* request, bool started) {}
 
-void NetworkDelegate::OnURLRequestDestroyed(net::URLRequest* request) {
-}
+void NetworkDelegate::OnURLRequestDestroyed(net::URLRequest* request) {}
 
 void NetworkDelegate::OnPACScriptError(int line_number,
-                                       const base::string16& error) {
-}
+                                       const base::string16& error) {}
 
 NetworkDelegate::AuthRequiredResponse NetworkDelegate::OnAuthRequired(
     net::URLRequest* request,
@@ -113,13 +104,13 @@ NetworkDelegate::AuthRequiredResponse NetworkDelegate::OnAuthRequired(
 }
 
 bool NetworkDelegate::OnCanGetCookies(const net::URLRequest& request,
-                                           const net::CookieList& cookie_list) {
+                                      const net::CookieList& cookie_list) {
   return true;
 }
 
 bool NetworkDelegate::OnCanSetCookie(const net::URLRequest& request,
-                                          const std::string& cookie_line,
-                                          net::CookieOptions* options) {
+                                     const net::CanonicalCookie& cookie_line,
+                                     net::CookieOptions* options) {
   return true;
 }
 
@@ -154,10 +145,9 @@ bool NetworkDelegate::OnCanQueueReportingReport(
   return false;
 }
 
-bool NetworkDelegate::OnCanSendReportingReport(
-    const url::Origin& origin) const {
-  return false;
-}
+void NetworkDelegate::OnCanSendReportingReports(
+    std::set<url::Origin> origins,
+    base::OnceCallback<void(std::set<url::Origin>)> result_callback) const {}
 
 bool NetworkDelegate::OnCanSetReportingClient(
     const url::Origin& origin,

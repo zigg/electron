@@ -315,7 +315,8 @@ void AtomNetworkDelegate::OnBeforeRedirect(net::URLRequest* request,
                     request->was_cached());
 }
 
-void AtomNetworkDelegate::OnResponseStarted(net::URLRequest* request) {
+void AtomNetworkDelegate::OnResponseStarted(net::URLRequest* request,
+                                            int net_error) {
   if (!base::ContainsKey(simple_listeners_, kOnResponseStarted)) {
     brightray::NetworkDelegate::OnResponseStarted(request);
     return;
