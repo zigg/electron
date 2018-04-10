@@ -6,6 +6,7 @@
 #define BRIGHTRAY_BROWSER_NOTIFICATION_PRESENTER_H_
 
 #include <set>
+#include <string>
 
 #include "base/memory/weak_ptr.h"
 

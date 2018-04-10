@@ -33,7 +33,7 @@ void NotificationPresenter::RemoveNotification(Notification* notification) {
 void NotificationPresenter::CloseNotificationWithId(
     const std::string& notification_id) {
   auto it = std::find_if(notifications_.begin(), notifications_.end(),
-                         [&](const Notification* n) {
+                         [&notification_id](const Notification* n) {
                            return n->notification_id() == notification_id;
                          });
   if (it != notifications_.end())

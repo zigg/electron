@@ -5,6 +5,7 @@
 #ifndef BRIGHTRAY_BROWSER_NETWORK_DELEGATE_H_
 #define BRIGHTRAY_BROWSER_NETWORK_DELEGATE_H_
 
+#include <set>
 #include <string>
 #include <vector>
 
