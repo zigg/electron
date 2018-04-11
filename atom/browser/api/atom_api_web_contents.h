@@ -356,10 +356,6 @@ class WebContents : public mate::TrackableObject<WebContents>,
                    const base::string16& error_description) override;
   void DidStartLoading() override;
   void DidStopLoading() override;
-  void DidGetResourceResponseStart(
-      const content::ResourceRequestDetails& details) override;
-  void DidGetRedirectForResourceRequest(
-      const content::ResourceRedirectDetails& details) override;
   void DidFinishNavigation(
       content::NavigationHandle* navigation_handle) override;
   bool OnMessageReceived(const IPC::Message& message) override;

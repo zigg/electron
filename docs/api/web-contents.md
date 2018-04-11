@@ -89,38 +89,6 @@ Corresponds to the points in time when the spinner of the tab started spinning.
 
 Corresponds to the points in time when the spinner of the tab stopped spinning.
 
-#### Event: 'did-get-response-details'
-
-Returns:
-
-* `event` Event
-* `status` Boolean
-* `newURL` String
-* `originalURL` String
-* `httpResponseCode` Integer
-* `requestMethod` String
-* `referrer` String
-* `headers` Object
-* `resourceType` String
-
-Emitted when details regarding a requested resource are available.
-`status` indicates the socket connection to download the resource.
-
-#### Event: 'did-get-redirect-request'
-
-Returns:
-
-* `event` Event
-* `oldURL` String
-* `newURL` String
-* `isMainFrame` Boolean
-* `httpResponseCode` Integer
-* `requestMethod` String
-* `referrer` String
-* `headers` Object
-
-Emitted when a redirect is received while requesting a resource.
-
 #### Event: 'dom-ready'
 
 Returns:
