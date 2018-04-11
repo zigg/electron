@@ -31,13 +31,13 @@ namespace brightray {
 class InspectableWebContents;
 }
 
-namespace content {
-class ResourceRequestBody;
-}
-
 namespace mate {
 class Arguments;
 class Dictionary;
+}
+
+namespace network {
+class ResourceRequestBody;
 }
 
 namespace atom {
@@ -227,7 +227,7 @@ class WebContents : public mate::TrackableObject<WebContents>,
       const std::string& frame_name,
       WindowOpenDisposition disposition,
       const std::vector<std::string>& features,
-      const scoped_refptr<content::ResourceRequestBody>& body);
+      const scoped_refptr<network::ResourceRequestBody>& body);
 
   // Returns the web preferences of current WebContents.
   v8::Local<v8::Value> GetWebPreferences(v8::Isolate* isolate);
