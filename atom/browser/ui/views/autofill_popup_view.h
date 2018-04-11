@@ -43,7 +43,7 @@ class AutofillPopupChildView : public views::View {
 
   // views::Views implementation
   void GetAccessibleNodeData(ui::AXNodeData* node_data) override {
-    node_data->role = ui::AX_ROLE_MENU_ITEM;
+    node_data->role = ax::mojom::Role::kMenuItem;
     node_data->SetName(suggestion_);
   }
 
