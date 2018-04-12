@@ -318,7 +318,7 @@ void AtomNetworkDelegate::OnBeforeRedirect(net::URLRequest* request,
 void AtomNetworkDelegate::OnResponseStarted(net::URLRequest* request,
                                             int net_error) {
   if (!base::ContainsKey(simple_listeners_, kOnResponseStarted)) {
-    brightray::NetworkDelegate::OnResponseStarted(request);
+    brightray::NetworkDelegate::OnResponseStarted(request, net_error);
     return;
   }
 
