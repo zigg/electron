@@ -54,9 +54,7 @@ PrintViewManagerBase::PrintViewManagerBase(content::WebContents* web_contents)
       cookie_(0),
       queue_(g_browser_process->print_job_manager()->queue()) {
   DCHECK(queue_.get());
-#if !defined(OS_MACOSX)
   expecting_first_page_ = true;
-#endif  // OS_MACOSX
   printing_enabled_ = true;
 }
 
@@ -115,6 +113,13 @@ void PrintViewManagerBase::OnDidGetDocumentCookie(int cookie) {
 
 void PrintViewManagerBase::OnDidPrintPage(
   const PrintHostMsg_DidPrintPage_Params& params) {
+// TODO(rbpotter): Remove this check once there are no more spurious
+// DidPrintPage messages.
+#if !defined(OS_WIN)
+  if (!expecting_first_page_)
+    return;
+#endif
+
   if (!OpportunisticallyCreatePrintJob(params.document_cookie))
     return;
 
@@ -125,12 +130,8 @@ void PrintViewManagerBase::OnDidPrintPage(
     return;
   }
 
-#if defined(OS_MACOSX)
-  const bool metafile_must_be_valid = true;
-#else
   const bool metafile_must_be_valid = expecting_first_page_;
   expecting_first_page_ = false;
-#endif  // OS_MACOSX
 
   base::SharedMemory shared_buf(params.metafile_data_handle, true);
   if (metafile_must_be_valid) {
@@ -152,10 +153,8 @@ void PrintViewManagerBase::OnDidPrintPage(
 
 #if !defined(OS_WIN)
   // Update the rendered document. It will send notifications to the listener.
-  document->SetPage(params.page_number,
-                    std::move(metafile),
-                    params.page_size,
-                    params.content_area);
+  document->SetDocument(std::move(metafile), params.page_size,
+                        params.content_area);
 
   ShouldQuitFromInnerMessageLoop();
 #else
@@ -370,9 +369,7 @@ void PrintViewManagerBase::DisconnectFromCurrentPrintJob() {
     // DO NOT wait for the job to finish.
     ReleasePrintJob();
   }
-#if !defined(OS_MACOSX)
   expecting_first_page_ = true;
-#endif  // OS_MACOSX
 }
 
 void PrintViewManagerBase::PrintingDone(bool success) {
