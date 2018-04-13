@@ -13,7 +13,6 @@
 #include "base/strings/string16.h"
 #include "base/strings/string_split.h"
 #include "base/strings/utf_string_conversions.h"
-#include "chrome/common/widevine_cdm_messages.h"
 #include "components/cdm/renderer/widevine_key_system_properties.h"
 #include "content/public/renderer/render_thread.h"
 #include "media/base/eme_constants.h"
