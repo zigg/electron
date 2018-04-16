@@ -101,7 +101,7 @@ void AutofillPopupView::Show() {
   auto host = popup_->frame_host_->GetRenderViewHost()->GetWidget();
   host->AddKeyPressEventCallback(keypress_callback_);
 
-  NotifyAccessibilityEvent(ui::AX_EVENT_MENU_START, true);
+  NotifyAccessibilityEvent(ax::mojom::Event::kMenuStart, true);
 }
 
 void AutofillPopupView::Hide() {
@@ -112,7 +112,7 @@ void AutofillPopupView::Hide() {
   }
 
   RemoveObserver();
-  NotifyAccessibilityEvent(ui::AX_EVENT_MENU_END, true);
+  NotifyAccessibilityEvent(ax::mojom::Event::kMenuEnd, true);
 
   if (GetWidget()) {
     GetWidget()->Close();
@@ -140,7 +140,7 @@ void AutofillPopupView::OnSelectedRowChanged(
     int selected = current_row_selection.value_or(-1);
     if (selected == -1 || selected >= child_count())
       return;
-    child_at(selected)->NotifyAccessibilityEvent(ui::AX_EVENT_SELECTION, true);
+    child_at(selected)->NotifyAccessibilityEvent(ax::mojom::Event::kSelection, true);
   }
 }
 
@@ -255,7 +255,7 @@ void AutofillPopupView::OnPaint(gfx::Canvas* canvas) {
 }
 
 void AutofillPopupView::GetAccessibleNodeData(ui::AXNodeData* node_data) {
-  node_data->role = ui::AX_ROLE_MENU;
+  node_data->role = ax::mojom::Role::kMenu;
   node_data->SetName("Autofill Menu");
 }
 
