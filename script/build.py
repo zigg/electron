@@ -56,7 +56,7 @@ def main():
   env = build_env()
   for config in args.configuration:
     build_path = os.path.join('out', config[0])
-    build_args = ['-C', build_path, args.target]
+    build_args = ['-C', build_path, 'brightray']
     if args.compdb:
       build_args += ['-t', 'compdb', 'cxx', 'cc']
       compdb = open(r'compile_commands.json','w')
