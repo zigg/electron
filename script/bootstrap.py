@@ -261,6 +261,10 @@ def get_libchromiumcontent_commit():
   commit = os.getenv('LIBCHROMIUMCONTENT_COMMIT')
   if commit:
     return commit
+    
+  # TODO(alexeykuzmin): Remove it.
+  if sys.platform == 'darwin':
+    return '1289ed3179a56b2b4022ec51968f60a974c37d78'
 
   # Extract full SHA-1 of libcc submodule commit
   output = execute(['git', 'submodule', 'status', 'vendor/libchromiumcontent'])
