@@ -152,9 +152,6 @@ class OffScreenRenderWidgetHostView
       const gfx::Rect& src_subrect,
       scoped_refptr<media::VideoFrame> target,
       const base::Callback<void(const gfx::Rect&, bool)>& callback) override;
-  void BeginFrameSubscription(
-    std::unique_ptr<content::RenderWidgetHostViewFrameSubscriber>) override;
-  void EndFrameSubscription() override;
   void InitAsGuest(
     content::RenderWidgetHostView*,
     content::RenderWidgetHostViewGuest*) override;

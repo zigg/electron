@@ -1572,10 +1572,8 @@ void WebContents::SendInputEvent(v8::Isolate* isolate,
 }
 
 void WebContents::BeginFrameSubscription(mate::Arguments* args) {
-  bool only_dirty = false;
   FrameSubscriber::FrameCaptureCallback callback;
 
-  args->GetNext(&only_dirty);
   if (!args->GetNext(&callback)) {
     args->ThrowError();
     return;
@@ -1583,16 +1581,12 @@ void WebContents::BeginFrameSubscription(mate::Arguments* args) {
 
   const auto view = web_contents()->GetRenderWidgetHostView();
   if (view) {
-    std::unique_ptr<FrameSubscriber> frame_subscriber(new FrameSubscriber(
-        isolate(), view, callback, only_dirty));
-    view->BeginFrameSubscription(std::move(frame_subscriber));
+    frame_subscriber_.reset(new FrameSubscriber(isolate(), view, callback));
   }
 }
 
 void WebContents::EndFrameSubscription() {
-  const auto view = web_contents()->GetRenderWidgetHostView();
-  if (view)
-    view->EndFrameSubscription();
+  frame_subscriber_.reset();
 }
 
 void WebContents::StartDrag(const mate::Dictionary& item,
