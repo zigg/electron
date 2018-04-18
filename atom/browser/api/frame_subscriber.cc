@@ -6,8 +6,8 @@
 
 #include "atom/common/native_mate_converters/gfx_converter.h"
 #include "components/viz/host/host_frame_sink_manager.h"
-#include "content/browser/renderer_host/render_widget_host_view_base.h"
 #include "content/browser/compositor/surface_utils.h"
+#include "content/browser/renderer_host/render_widget_host_view_base.h"
 
 #include "atom/common/node_includes.h"
 
